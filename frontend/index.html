@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Colegio Renopla App</title>
+  </head>
+  <body>
+    <h1>Sistema Colegio Renopla</h1>
+
+    <!-- LOGIN -->
+    <div id="loginSection">
+      <h2>Bienvenido</h2>
+      <input type="text" id="username" placeholder="Usuario" />
+      <input type="password" id="password" placeholder="Contraseña" />
+      <button onclick="login()">Entrar</button>
+    </div>
+
+    <hr />
+
+    <!-- DIRECTOR -->
+    <div id="directorPanel" style="display: none">
+      <h2 id="bienvenidaDirector"></h2>
+
+      <!-- CREAR ESTUDIANTE -->
+      <h3>Crear Estudiante</h3>
+      <input type="text" id="nombre" placeholder="Nombre" />
+      <input type="text" id="apellido" placeholder="Apellido" />
+      <input type="text" id="documento" placeholder="Documento" />
+      <input type="text" id="telefono" placeholder="Teléfono" />
+      <input type="number" id="curso" placeholder="ID Curso" />
+      <button onclick="crearEstudiante()">Crear</button>
+
+      <hr />
+
+      <!--ELIMINAR ESTUDIANTE -->
+      <h3>Eliminar Estudiante</h3>
+      <input type="number" id="idEliminarEst" placeholder="ID Estudiante" />
+      <button onclick="eliminarEstudiante()">Eliminar</button>
+
+      <hr />
+
+      <!--CREAR PROFESOR -->
+      <h3>Crear Profesor</h3>
+      <input type="text" id="prof_nombre" placeholder="Nombre" />
+      <input type="text" id="prof_apellido" placeholder="Apellido" />
+      <input type="text" id="prof_documento" placeholder="Documento" />
+      <input type="text" id="prof_telefono" placeholder="Teléfono" />
+      <input type="text" id="prof_especialidad" placeholder="Especialidad" />
+      <button onclick="crearProfesor()">Crear</button>
+
+      <hr />
+
+      <!-- ELIMINAR PROFESOR -->
+      <h3>Eliminar Profesor</h3>
+      <input type="number" id="idEliminarProf" placeholder="ID Profesor" />
+      <button onclick="eliminarProfesor()">Eliminar</button>
+
+      <br /><br />
+      <button onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <!-- PROFESOR -->
+    <div id="profesorPanel" style="display: none">
+      <h2 id="bienvenidaProfesor"></h2>
+
+      <!-- SUBIR NOTA -->
+      <h3>Subir Nota</h3>
+      <select id="id_asignacion">
+        <option value="">-- Selecciona materia/curso --</option>
+      </select>
+      <input type="number" id="id_estudiante" placeholder="ID Estudiante" />
+      <input type="number" id="periodo" placeholder="Periodo" />
+      <input type="number" step="0.1" id="nota" placeholder="Nota" />
+      <button onclick="crearNota()">Guardar Nota</button>
+
+      <hr />
+
+      <!-- EDITAR NOTA -->
+      <h3>Editar Nota</h3>
+      <input type="number" id="id_nota_edit" placeholder="ID Nota" />
+      <input type="number" step="0.1" id="nota_edit" placeholder="Nueva Nota" />
+      <button onclick="editarNota()">Actualizar Nota</button>
+
+      <hr />
+
+      <!-- REGISTRAR ASISTENCIA -->
+      <h3>Registrar Asistencia</h3>
+      <input
+        type="number"
+        id="id_estudiante_asist"
+        placeholder="ID Estudiante"
+      />
+      <input type="date" id="fecha_asist" />
+      <select id="estado_asist">
+        <option value="Presente">Presente</option>
+        <option value="Ausente">Ausente</option>
+      </select>
+      <button onclick="registrarAsistencia()">Registrar</button>
+
+      <br /><br />
+      <button onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <!-- ESTUDIANTE -->
+    <div id="estudiantePanel" style="display: none">
+      <h2 id="bienvenidaEstudiante"></h2>
+
+      <button onclick="verMisNotas()">Ver mis notas</button>
+      <ul id="listaNotas"></ul>
+
+      <br />
+      <button onclick="verMiAsistencia()">Ver mi asistencia</button>
+      <ul id="listaAsistencia"></ul>
+
+      <br />
+      <button onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <script>
+      const API = "http://localhost:3000";
+
+      // LOGIN
+      async function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const res = await fetch(API + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (data.usuario) {
+          localStorage.setItem("usuario", JSON.stringify(data.usuario));
+          mostrarPanel(data.usuario.rol);
+        } else {
+          alert("Credenciales incorrectas");
+        }
+      }
+
+      // CARGAR ASIGNACIONES DEL PROFESOR
+      async function cargarAsignaciones() {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+        const res = await fetch(API + "/asignaciones/" + usuario.id_profesor);
+        const data = await res.json();
+
+        const select = document.getElementById("id_asignacion");
+        select.innerHTML =
+          '<option value="">-- Selecciona materia/curso --</option>';
+
+        data.forEach((a) => {
+          const option = document.createElement("option");
+          option.value = a.id_asignacion;
+          option.textContent = `${a.materia} - ${a.curso}`;
+          select.appendChild(option);
+        });
+      }
+
+      // MOSTRAR PANEL SEGÚN ROL (modificado)
+      function mostrarPanel(rol) {
+        document.getElementById("loginSection").style.display = "none";
+
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        const nombre = usuario.nombre || "";
+        const apellido = usuario.apellido || "";
+
+        if (rol === "director") {
+          document.getElementById("directorPanel").style.display = "block";
+          document.getElementById("bienvenidaDirector").textContent =
+            `Bienvenido, Director`;
+        } else if (rol === "profesor") {
+          document.getElementById("profesorPanel").style.display = "block";
+          document.getElementById("bienvenidaProfesor").textContent =
+            `Bienvenido, Prof. ${nombre} ${apellido}`;
+          cargarAsignaciones();
+        } else if (rol === "estudiante") {
+          document.getElementById("estudiantePanel").style.display = "block";
+          document.getElementById("bienvenidaEstudiante").textContent =
+            `Bienvenido, ${nombre} ${apellido}`;
+        }
+      }
+
+      // AUTO LOGIN
+      window.onload = () => {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        if (usuario) {
+          mostrarPanel(usuario.rol);
+        }
+      };
+
+      // LOGOUT
+      function logout() {
+        localStorage.removeItem("usuario");
+        location.reload();
+      }
+
+      // CREAR ESTUDIANTE
+      async function crearEstudiante() {
+        const body = {
+          nombre: document.getElementById("nombre").value,
+          apellido: document.getElementById("apellido").value,
+          documento: document.getElementById("documento").value,
+          telefono: document.getElementById("telefono").value,
+          id_curso: document.getElementById("curso").value,
+        };
+
+        const res = await fetch(API + "/estudiantes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // ELIMINAR ESTUDIANTE
+      async function eliminarEstudiante() {
+        const id = document.getElementById("idEliminarEst").value;
+
+        const res = await fetch(API + "/estudiantes/" + id, {
+          method: "DELETE",
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // CREAR PROFESOR
+      async function crearProfesor() {
+        const body = {
+          nombre: document.getElementById("prof_nombre").value,
+          apellido: document.getElementById("prof_apellido").value,
+          documento: document.getElementById("prof_documento").value,
+          telefono: document.getElementById("prof_telefono").value,
+          especialidad: document.getElementById("prof_especialidad").value,
+        };
+
+        const res = await fetch(API + "/profesores", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // ELIMINAR PROFESOR
+      async function eliminarProfesor() {
+        const id = document.getElementById("idEliminarProf").value;
+
+        const res = await fetch(API + "/profesores/" + id, {
+          method: "DELETE",
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // CREAR NOTA
+      async function crearNota() {
+        const body = {
+          id_estudiante: document.getElementById("id_estudiante").value,
+          id_asignacion: document.getElementById("id_asignacion").value,
+          periodo: document.getElementById("periodo").value,
+          nota: document.getElementById("nota").value,
+        };
+
+        const res = await fetch(API + "/notas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // EDITAR NOTA
+      async function editarNota() {
+        const id = document.getElementById("id_nota_edit").value;
+        const nota = document.getElementById("nota_edit").value;
+
+        const res = await fetch(API + "/notas/" + id, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nota }),
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // VER MIS NOTAS (ESTUDIANTE)
+      async function verMisNotas() {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+        const res = await fetch(API + "/notas/" + usuario.id_estudiante);
+        const data = await res.json();
+
+        const lista = document.getElementById("listaNotas");
+        lista.innerHTML = "";
+
+        if (data.length === 0) {
+          lista.innerHTML = "<li>No tienes notas registradas aún.</li>";
+          return;
+        }
+
+        data.forEach((n) => {
+          const li = document.createElement("li");
+          li.textContent = `${n.materia} - Periodo ${n.periodo}: ${n.nota}`;
+          lista.appendChild(li);
+        });
+      }
+
+      // REGISTRAR ASISTENCIA (PROFESOR)
+      async function registrarAsistencia() {
+        const id_estudiante = document.getElementById(
+          "id_estudiante_asist",
+        ).value;
+        const fecha = document.getElementById("fecha_asist").value;
+        const estado = document.getElementById("estado_asist").value;
+
+        if (!id_estudiante || !fecha) {
+          alert("Por favor completa todos los campos");
+          return;
+        }
+
+        const res = await fetch(API + "/asistencia", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_estudiante, fecha, estado }),
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+      }
+
+      // VER ASISTENCIA (ESTUDIANTE)
+      async function verMiAsistencia() {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+        const res = await fetch(API + "/asistencia/" + usuario.id_estudiante);
+        const data = await res.json();
+
+        const lista = document.getElementById("listaAsistencia");
+        lista.innerHTML = "";
+
+        if (data.length === 0) {
+          lista.innerHTML = "<li>No tienes registros de asistencia aún.</li>";
+          return;
+        }
+
+        data.forEach((a) => {
+          const li = document.createElement("li");
+          const fecha = new Date(a.fecha).toLocaleDateString("es-CO");
+          li.textContent = `${fecha}: ${a.estado}`;
+          lista.appendChild(li);
+        });
+      }
+    </script>
+  </body>
+</html>
