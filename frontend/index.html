@@ -2,136 +2,580 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Colegio Renopla App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colegio Renopla</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #0d1b2a;
+        --navy-mid: #1a2e45;
+        --navy-light: #243b55;
+        --gold: #c9a84c;
+        --gold-light: #e2c97e;
+        --gold-pale: #f5e9c8;
+        --white: #f8f6f0;
+        --gray: #8a9ab0;
+        --danger: #c0392b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--navy);
+        color: var(--white);
+        min-height: 100vh;
+      }
+
+      /* HEADER */
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--navy) 0%,
+          var(--navy-mid) 100%
+        );
+        border-bottom: 2px solid var(--gold);
+        padding: 1.2rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+      }
+
+      header::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+
+      .logo-crest {
+        width: 54px;
+        height: 54px;
+        background: linear-gradient(145deg, var(--gold), var(--gold-light));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        box-shadow: 0 0 18px rgba(201, 168, 76, 0.35);
+        flex-shrink: 0;
+      }
+
+      .header-text h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        color: var(--gold-light);
+        letter-spacing: 0.05em;
+      }
+
+      .header-text p {
+        font-size: 0.72rem;
+        color: var(--gray);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      /* MAIN CONTAINER */
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 3rem 1rem;
+        min-height: calc(100vh - 90px);
+      }
+
+      /* CARD */
+      .card {
+        background: linear-gradient(160deg, var(--navy-mid), var(--navy-light));
+        border: 1px solid rgba(201, 168, 76, 0.25);
+        border-radius: 16px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 680px;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(201, 168, 76, 0.1);
+        animation: fadeUp 0.5s ease both;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        color: var(--gold-light);
+        margin-bottom: 0.3rem;
+      }
+
+      .card-subtitle {
+        font-size: 0.78rem;
+        color: var(--gray);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+      }
+
+      /* SECTION HEADERS */
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: var(--gold);
+        margin: 1.8rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(201, 168, 76, 0.2);
+      }
+
+      .divider {
+        border: none;
+        border-top: 1px solid rgba(201, 168, 76, 0.1);
+        margin: 1.8rem 0;
+      }
+
+      /* INPUTS */
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+      }
+
+      .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+
+      input,
+      select {
+        background: rgba(13, 27, 42, 0.6);
+        border: 1px solid rgba(201, 168, 76, 0.2);
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        width: 100%;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        outline: none;
+      }
+
+      input::placeholder {
+        color: var(--gray);
+      }
+
+      input:focus,
+      select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+      }
+
+      select option {
+        background: var(--navy-mid);
+        color: var(--white);
+      }
+
+      /* BUTTONS */
+      .btn {
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.03em;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: var(--navy);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(201, 168, 76, 0.35);
+      }
+
+      .btn-danger {
+        background: rgba(192, 57, 43, 0.15);
+        color: #e74c3c;
+        border: 1px solid rgba(192, 57, 43, 0.3);
+      }
+
+      .btn-danger:hover {
+        background: rgba(192, 57, 43, 0.25);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--gray);
+        border: 1px solid rgba(138, 154, 176, 0.3);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      .btn-full {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+      }
+
+      /* LOGIN */
+      #loginSection {
+        text-align: center;
+      }
+
+      .login-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .login-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin: 1.5rem 0;
+      }
+
+      /* NOTAS LIST */
+      #listaNotas,
+      #listaAsistencia {
+        list-style: none;
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      #listaNotas li,
+      #listaAsistencia li {
+        background: rgba(13, 27, 42, 0.5);
+        border: 1px solid rgba(201, 168, 76, 0.1);
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-size: 0.88rem;
+        color: var(--gold-pale);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      #listaNotas li::before {
+        content: "📋";
+      }
+      #listaAsistencia li::before {
+        content: "📅";
+      }
+
+      /* FOOTER */
+      footer {
+        text-align: center;
+        padding: 1.5rem;
+        color: var(--gray);
+        font-size: 0.75rem;
+        border-top: 1px solid rgba(201, 168, 76, 0.1);
+        letter-spacing: 0.1em;
+      }
+
+      /* BADGE ROL */
+      .rol-badge {
+        display: inline-block;
+        background: rgba(201, 168, 76, 0.15);
+        color: var(--gold);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        border-radius: 20px;
+        padding: 0.2rem 0.8rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+      }
+    </style>
   </head>
   <body>
-    <h1>Sistema Colegio Renopla</h1>
+    <header>
+      <div class="logo-crest">🎓</div>
+      <div class="header-text">
+        <h1>Colegio Renopla</h1>
+        <p>Sistema de Gestión Académica</p>
+      </div>
+    </header>
 
-    <!-- LOGIN -->
-    <div id="loginSection">
-      <h2>Bienvenido</h2>
-      <input type="text" id="username" placeholder="Usuario" />
-      <input type="password" id="password" placeholder="Contraseña" />
-      <button onclick="login()">Entrar</button>
+    <div class="main">
+      <!-- LOGIN -->
+      <div id="loginSection" class="card">
+        <div class="login-icon">🏛️</div>
+        <div class="card-title">Bienvenido</div>
+        <div class="card-subtitle">Ingrese sus credenciales para continuar</div>
+        <div class="login-fields">
+          <input type="text" id="username" placeholder="Usuario" />
+          <input type="password" id="password" placeholder="Contraseña" />
+          <button class="btn btn-primary btn-full" onclick="login()">
+            Ingresar al Sistema
+          </button>
+        </div>
+      </div>
+
+      <!-- DIRECTOR -->
+      <div id="directorPanel" class="card" style="display: none">
+        <div class="card-title">
+          <h2 id="bienvenidaDirector"></h2>
+          <span class="rol-badge">Director</span>
+        </div>
+        <div class="card-subtitle">Panel de administración institucional</div>
+
+        <div class="section-title">👤 Gestión de Estudiantes</div>
+        <div class="input-group">
+          <div class="input-row">
+            <input type="text" id="nombre" placeholder="Nombre" />
+            <input type="text" id="apellido" placeholder="Apellido" />
+          </div>
+          <div class="input-row">
+            <input type="text" id="documento" placeholder="Documento" />
+            <input type="text" id="telefono" placeholder="Teléfono" />
+          </div>
+          <input type="number" id="curso" placeholder="ID Curso" />
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="crearEstudiante()">
+              ➕ Crear Estudiante
+            </button>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            id="idEliminarEst"
+            placeholder="ID Estudiante a eliminar"
+          />
+          <div class="btn-row">
+            <button class="btn btn-danger" onclick="eliminarEstudiante()">
+              🗑️ Eliminar Estudiante
+            </button>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="section-title">🧑‍🏫 Gestión de Profesores</div>
+        <div class="input-group">
+          <div class="input-row">
+            <input type="text" id="prof_nombre" placeholder="Nombre" />
+            <input type="text" id="prof_apellido" placeholder="Apellido" />
+          </div>
+          <div class="input-row">
+            <input type="text" id="prof_documento" placeholder="Documento" />
+            <input type="text" id="prof_telefono" placeholder="Teléfono" />
+          </div>
+          <input
+            type="text"
+            id="prof_especialidad"
+            placeholder="Especialidad"
+          />
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="crearProfesor()">
+              ➕ Crear Profesor
+            </button>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            id="idEliminarProf"
+            placeholder="ID Profesor a eliminar"
+          />
+          <div class="btn-row">
+            <button class="btn btn-danger" onclick="eliminarProfesor()">
+              🗑️ Eliminar Profesor
+            </button>
+          </div>
+        </div>
+
+        <hr class="divider" />
+        <button class="btn btn-outline" onclick="logout()">
+          ⬅️ Cerrar Sesión
+        </button>
+      </div>
+
+      <!-- PROFESOR -->
+      <div id="profesorPanel" class="card" style="display: none">
+        <div class="card-title">
+          <h2 id="bienvenidaProfesor"></h2>
+          <span class="rol-badge">Profesor</span>
+        </div>
+        <div class="card-subtitle">Panel docente</div>
+
+        <div class="section-title">📝 Subir Nota</div>
+        <div class="input-group">
+          <select id="id_asignacion">
+            <option value="">-- Selecciona materia / curso --</option>
+          </select>
+          <div class="input-row">
+            <input
+              type="number"
+              id="id_estudiante"
+              placeholder="ID Estudiante"
+            />
+            <input type="number" id="periodo" placeholder="Periodo" />
+          </div>
+          <input
+            type="number"
+            step="0.1"
+            id="nota"
+            placeholder="Nota (ej: 4.5)"
+          />
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="crearNota()">
+              💾 Guardar Nota
+            </button>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="section-title">✏️ Editar Nota</div>
+        <div class="input-group">
+          <div class="input-row">
+            <input type="number" id="id_nota_edit" placeholder="ID Nota" />
+            <input
+              type="number"
+              step="0.1"
+              id="nota_edit"
+              placeholder="Nueva Nota"
+            />
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="editarNota()">
+              🔄 Actualizar Nota
+            </button>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="section-title">📅 Registrar Asistencia</div>
+        <div class="input-group">
+          <div class="input-row">
+            <input
+              type="number"
+              id="id_estudiante_asist"
+              placeholder="ID Estudiante"
+            />
+            <input type="date" id="fecha_asist" />
+          </div>
+          <select id="estado_asist">
+            <option value="Presente">✅ Presente</option>
+            <option value="Ausente">❌ Ausente</option>
+          </select>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="registrarAsistencia()">
+              📋 Registrar Asistencia
+            </button>
+          </div>
+        </div>
+
+        <hr class="divider" />
+        <button class="btn btn-outline" onclick="logout()">
+          ⬅️ Cerrar Sesión
+        </button>
+      </div>
+
+      <!-- ESTUDIANTE -->
+      <div id="estudiantePanel" class="card" style="display: none">
+        <div class="card-title">
+          <h2 id="bienvenidaEstudiante"></h2>
+          <span class="rol-badge">Estudiante</span>
+        </div>
+        <div class="card-subtitle">Portal estudiantil</div>
+
+        <div class="section-title">📊 Mis Calificaciones</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="verMisNotas()">
+            Ver mis notas
+          </button>
+        </div>
+        <ul id="listaNotas"></ul>
+
+        <hr class="divider" />
+
+        <div class="section-title">📅 Mi Asistencia</div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="verMiAsistencia()">
+            Ver mi asistencia
+          </button>
+        </div>
+        <ul id="listaAsistencia"></ul>
+
+        <hr class="divider" />
+        <button class="btn btn-outline" onclick="logout()">
+          ⬅️ Cerrar Sesión
+        </button>
+      </div>
     </div>
 
-    <hr />
-
-    <!-- DIRECTOR -->
-    <div id="directorPanel" style="display: none">
-      <h2 id="bienvenidaDirector"></h2>
-
-      <!-- CREAR ESTUDIANTE -->
-      <h3>Crear Estudiante</h3>
-      <input type="text" id="nombre" placeholder="Nombre" />
-      <input type="text" id="apellido" placeholder="Apellido" />
-      <input type="text" id="documento" placeholder="Documento" />
-      <input type="text" id="telefono" placeholder="Teléfono" />
-      <input type="number" id="curso" placeholder="ID Curso" />
-      <button onclick="crearEstudiante()">Crear</button>
-
-      <hr />
-
-      <!--ELIMINAR ESTUDIANTE -->
-      <h3>Eliminar Estudiante</h3>
-      <input type="number" id="idEliminarEst" placeholder="ID Estudiante" />
-      <button onclick="eliminarEstudiante()">Eliminar</button>
-
-      <hr />
-
-      <!--CREAR PROFESOR -->
-      <h3>Crear Profesor</h3>
-      <input type="text" id="prof_nombre" placeholder="Nombre" />
-      <input type="text" id="prof_apellido" placeholder="Apellido" />
-      <input type="text" id="prof_documento" placeholder="Documento" />
-      <input type="text" id="prof_telefono" placeholder="Teléfono" />
-      <input type="text" id="prof_especialidad" placeholder="Especialidad" />
-      <button onclick="crearProfesor()">Crear</button>
-
-      <hr />
-
-      <!-- ELIMINAR PROFESOR -->
-      <h3>Eliminar Profesor</h3>
-      <input type="number" id="idEliminarProf" placeholder="ID Profesor" />
-      <button onclick="eliminarProfesor()">Eliminar</button>
-
-      <br /><br />
-      <button onclick="logout()">Cerrar sesión</button>
-    </div>
-
-    <!-- PROFESOR -->
-    <div id="profesorPanel" style="display: none">
-      <h2 id="bienvenidaProfesor"></h2>
-
-      <!-- SUBIR NOTA -->
-      <h3>Subir Nota</h3>
-      <select id="id_asignacion">
-        <option value="">-- Selecciona materia/curso --</option>
-      </select>
-      <input type="number" id="id_estudiante" placeholder="ID Estudiante" />
-      <input type="number" id="periodo" placeholder="Periodo" />
-      <input type="number" step="0.1" id="nota" placeholder="Nota" />
-      <button onclick="crearNota()">Guardar Nota</button>
-
-      <hr />
-
-      <!-- EDITAR NOTA -->
-      <h3>Editar Nota</h3>
-      <input type="number" id="id_nota_edit" placeholder="ID Nota" />
-      <input type="number" step="0.1" id="nota_edit" placeholder="Nueva Nota" />
-      <button onclick="editarNota()">Actualizar Nota</button>
-
-      <hr />
-
-      <!-- REGISTRAR ASISTENCIA -->
-      <h3>Registrar Asistencia</h3>
-      <input
-        type="number"
-        id="id_estudiante_asist"
-        placeholder="ID Estudiante"
-      />
-      <input type="date" id="fecha_asist" />
-      <select id="estado_asist">
-        <option value="Presente">Presente</option>
-        <option value="Ausente">Ausente</option>
-      </select>
-      <button onclick="registrarAsistencia()">Registrar</button>
-
-      <br /><br />
-      <button onclick="logout()">Cerrar sesión</button>
-    </div>
-
-    <!-- ESTUDIANTE -->
-    <div id="estudiantePanel" style="display: none">
-      <h2 id="bienvenidaEstudiante"></h2>
-
-      <button onclick="verMisNotas()">Ver mis notas</button>
-      <ul id="listaNotas"></ul>
-
-      <br />
-      <button onclick="verMiAsistencia()">Ver mi asistencia</button>
-      <ul id="listaAsistencia"></ul>
-
-      <br />
-      <button onclick="logout()">Cerrar sesión</button>
-    </div>
+    <footer>© 2025 Colegio Renopla — Todos los derechos reservados</footer>
 
     <script>
       const API = "http://localhost:3000";
 
-      // LOGIN
       async function login() {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-
         const res = await fetch(API + "/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
-
         const data = await res.json();
-
         if (data.usuario) {
           localStorage.setItem("usuario", JSON.stringify(data.usuario));
           mostrarPanel(data.usuario.rol);
@@ -140,29 +584,8 @@
         }
       }
 
-      // CARGAR ASIGNACIONES DEL PROFESOR
-      async function cargarAsignaciones() {
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
-
-        const res = await fetch(API + "/asignaciones/" + usuario.id_profesor);
-        const data = await res.json();
-
-        const select = document.getElementById("id_asignacion");
-        select.innerHTML =
-          '<option value="">-- Selecciona materia/curso --</option>';
-
-        data.forEach((a) => {
-          const option = document.createElement("option");
-          option.value = a.id_asignacion;
-          option.textContent = `${a.materia} - ${a.curso}`;
-          select.appendChild(option);
-        });
-      }
-
-      // MOSTRAR PANEL SEGÚN ROL (modificado)
       function mostrarPanel(rol) {
         document.getElementById("loginSection").style.display = "none";
-
         const usuario = JSON.parse(localStorage.getItem("usuario"));
         const nombre = usuario.nombre || "";
         const apellido = usuario.apellido || "";
@@ -170,34 +593,29 @@
         if (rol === "director") {
           document.getElementById("directorPanel").style.display = "block";
           document.getElementById("bienvenidaDirector").textContent =
-            `Bienvenido, Director`;
+            `Bienvenido`;
         } else if (rol === "profesor") {
           document.getElementById("profesorPanel").style.display = "block";
           document.getElementById("bienvenidaProfesor").textContent =
-            `Bienvenido, Prof. ${nombre} ${apellido}`;
+            `Prof. ${nombre} ${apellido}`;
           cargarAsignaciones();
         } else if (rol === "estudiante") {
           document.getElementById("estudiantePanel").style.display = "block";
           document.getElementById("bienvenidaEstudiante").textContent =
-            `Bienvenido, ${nombre} ${apellido}`;
+            `${nombre} ${apellido}`;
         }
       }
 
-      // AUTO LOGIN
       window.onload = () => {
         const usuario = JSON.parse(localStorage.getItem("usuario"));
-        if (usuario) {
-          mostrarPanel(usuario.rol);
-        }
+        if (usuario) mostrarPanel(usuario.rol);
       };
 
-      // LOGOUT
       function logout() {
         localStorage.removeItem("usuario");
         location.reload();
       }
 
-      // CREAR ESTUDIANTE
       async function crearEstudiante() {
         const body = {
           nombre: document.getElementById("nombre").value,
@@ -206,30 +624,24 @@
           telefono: document.getElementById("telefono").value,
           id_curso: document.getElementById("curso").value,
         };
-
         const res = await fetch(API + "/estudiantes", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // ELIMINAR ESTUDIANTE
       async function eliminarEstudiante() {
         const id = document.getElementById("idEliminarEst").value;
-
         const res = await fetch(API + "/estudiantes/" + id, {
           method: "DELETE",
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // CREAR PROFESOR
       async function crearProfesor() {
         const body = {
           nombre: document.getElementById("prof_nombre").value,
@@ -238,30 +650,39 @@
           telefono: document.getElementById("prof_telefono").value,
           especialidad: document.getElementById("prof_especialidad").value,
         };
-
         const res = await fetch(API + "/profesores", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // ELIMINAR PROFESOR
       async function eliminarProfesor() {
         const id = document.getElementById("idEliminarProf").value;
-
         const res = await fetch(API + "/profesores/" + id, {
           method: "DELETE",
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // CREAR NOTA
+      async function cargarAsignaciones() {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        const res = await fetch(API + "/asignaciones/" + usuario.id_profesor);
+        const data = await res.json();
+        const select = document.getElementById("id_asignacion");
+        select.innerHTML =
+          '<option value="">-- Selecciona materia / curso --</option>';
+        data.forEach((a) => {
+          const option = document.createElement("option");
+          option.value = a.id_asignacion;
+          option.textContent = `${a.materia} — ${a.curso}`;
+          select.appendChild(option);
+        });
+      }
+
       async function crearNota() {
         const body = {
           id_estudiante: document.getElementById("id_estudiante").value,
@@ -269,92 +690,73 @@
           periodo: document.getElementById("periodo").value,
           nota: document.getElementById("nota").value,
         };
-
         const res = await fetch(API + "/notas", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // EDITAR NOTA
       async function editarNota() {
         const id = document.getElementById("id_nota_edit").value;
         const nota = document.getElementById("nota_edit").value;
-
         const res = await fetch(API + "/notas/" + id, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nota }),
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // VER MIS NOTAS (ESTUDIANTE)
-      async function verMisNotas() {
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
-
-        const res = await fetch(API + "/notas/" + usuario.id_estudiante);
-        const data = await res.json();
-
-        const lista = document.getElementById("listaNotas");
-        lista.innerHTML = "";
-
-        if (data.length === 0) {
-          lista.innerHTML = "<li>No tienes notas registradas aún.</li>";
-          return;
-        }
-
-        data.forEach((n) => {
-          const li = document.createElement("li");
-          li.textContent = `${n.materia} - Periodo ${n.periodo}: ${n.nota}`;
-          lista.appendChild(li);
-        });
-      }
-
-      // REGISTRAR ASISTENCIA (PROFESOR)
       async function registrarAsistencia() {
         const id_estudiante = document.getElementById(
           "id_estudiante_asist",
         ).value;
         const fecha = document.getElementById("fecha_asist").value;
         const estado = document.getElementById("estado_asist").value;
-
         if (!id_estudiante || !fecha) {
           alert("Por favor completa todos los campos");
           return;
         }
-
         const res = await fetch(API + "/asistencia", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id_estudiante, fecha, estado }),
         });
-
         const data = await res.json();
         alert(data.mensaje || data.error);
       }
 
-      // VER ASISTENCIA (ESTUDIANTE)
+      async function verMisNotas() {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        const res = await fetch(API + "/notas/" + usuario.id_estudiante);
+        const data = await res.json();
+        const lista = document.getElementById("listaNotas");
+        lista.innerHTML = "";
+        if (data.length === 0) {
+          lista.innerHTML = "<li>No tienes notas registradas aún.</li>";
+          return;
+        }
+        data.forEach((n) => {
+          const li = document.createElement("li");
+          li.textContent = `${n.materia} — Periodo ${n.periodo}: ${n.nota}`;
+          lista.appendChild(li);
+        });
+      }
+
       async function verMiAsistencia() {
         const usuario = JSON.parse(localStorage.getItem("usuario"));
-
         const res = await fetch(API + "/asistencia/" + usuario.id_estudiante);
         const data = await res.json();
-
         const lista = document.getElementById("listaAsistencia");
         lista.innerHTML = "";
-
         if (data.length === 0) {
           lista.innerHTML = "<li>No tienes registros de asistencia aún.</li>";
           return;
         }
-
         data.forEach((a) => {
           const li = document.createElement("li");
           const fecha = new Date(a.fecha).toLocaleDateString("es-CO");
