@@ -15,13 +15,17 @@ const notasRoutes = require("./routes/notas");
 const profesoresRoutes = require("./routes/profesor");
 const asignacionesRoutes = require("./routes/asignaciones");
 const asistenciaRoutes = require("./routes/asistencia");
+const materiasRoutes = require("./routes/materias");
+const cursosRoutes = require("./routes/cursos");
 
+app.use("/cursos", cursosRoutes);
 app.use("/asistencia", asistenciaRoutes);
 app.use("/asignaciones", asignacionesRoutes);
 app.use("/estudiantes", estudiantesRoutes);
 app.use("/login", loginRoutes);
 app.use("/notas", notasRoutes);
 app.use("/profesores", profesoresRoutes);
+app.use("/materias", materiasRoutes);
 
 //  Ruta base
 app.get("/", (req, res) => {
